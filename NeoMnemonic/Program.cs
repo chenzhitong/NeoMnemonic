@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace NeoMnemonic
 {
@@ -6,9 +7,15 @@ namespace NeoMnemonic
     {
         static void Main(string[] args)
         {
-            var words = Mnemonic.CreateMnemonic();
-            Console.WriteLine(string.Join(',', words));
-            Console.ReadLine();
+            while (true)
+            {
+                var words = Mnemonic.GenerateMnemonic();
+                Console.WriteLine("Mnemonic: " + words);
+                var seed = Mnemonic.MnemonicToSeed(words);
+                var account = new Neo.Wallets.KeyPair(seed.ToList().Take(32).ToArray());
+                Console.WriteLine("WIF: " + account.Export()); ;
+                Console.ReadLine();
+            }
         }
     }
 }

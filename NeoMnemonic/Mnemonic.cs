@@ -9,16 +9,16 @@ namespace NeoMnemonic
 {
     static class Mnemonic
     {
-        private const string cSaltHeader = "mnemonic"; //这是盐的第一部分，如 BIP39 规范中所述
+        private const string saltHeader = "mnemonic"; //这是盐的第一部分，如 BIP39 规范中所述
         public enum Language { English, ChineseSimplified, ChineseTraditional, Unknown };
 
         /// <summary>
-        /// 创建助记词
+        /// 生成助记词
         /// </summary>
         /// <param name="entLength">随机序列(熵)的长度，为了防止错误，可选范围为 {128, 160, 192, 224, 256}</param>
         /// <param name="language">助词词语言</param>
         /// <returns>助记词列表</returns>
-        public static List<string> CreateMnemonic(EntropyLength entLength = EntropyLength._128, Language language = Language.English)
+        public static string GenerateMnemonic(EntropyLength entLength = EntropyLength._128, Language language = Language.English)
         {
             //创建一个 128 到 256 位的随机序列(熵)
             var entropyBytes = GetRandom((int)entLength / 8);
@@ -52,7 +52,24 @@ namespace NeoMnemonic
             else
                 wordList = new English();
             index.ForEach(p => words.Add(wordList.WordList[p]));
-            return words;
+            return string.Join(' ', words);
+        }
+
+        /// <summary>
+        /// 通过助记词和口令（可选）生成种子
+        /// </summary>
+        /// <param name="mnemonic">助记词</param>
+        /// <param name="passphrase">口令</param>
+        /// <returns></returns>
+        public static byte[] MnemonicToSeed(string mnemonic, string passphrase = "") 
+        {
+            using HMACSHA512 hmac = new HMACSHA512();
+            var counterBytes = Encoding.UTF8.GetBytes(mnemonic + saltHeader + passphrase);
+            for (int i = 0; i < 2048; i++)
+            {
+                counterBytes = hmac.ComputeHash(counterBytes);
+            }
+            return counterBytes;
         }
 
         /// <summary>
