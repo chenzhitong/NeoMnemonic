@@ -48,7 +48,7 @@ namespace NeoMnemonic
             if (language == Language.ChineseSimplified)
                 wordList = new ChineseSimplified();
             else if (language == Language.ChineseTraditional)
-                wordList = new ChineseSimplified();
+                wordList = new ChineseTraditional();
             else
                 wordList = new English();
             index.ForEach(p => words.Add(wordList.WordList[p]));
