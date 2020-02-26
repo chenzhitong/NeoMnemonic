@@ -4,6 +4,7 @@ using System.Text;
 using System.Security.Cryptography;
 using Neo.Cryptography;
 using System.Linq;
+using NBitcoin;
 
 namespace NeoMnemonic
 {
@@ -63,13 +64,15 @@ namespace NeoMnemonic
         /// <returns></returns>
         public static byte[] MnemonicToSeed(string mnemonic, string passphrase = "") 
         {
-            using HMACSHA512 hmac = new HMACSHA512();
-            var counterBytes = Encoding.UTF8.GetBytes(mnemonic + saltHeader + passphrase);
-            for (int i = 0; i < 2048; i++)
-            {
-                counterBytes = hmac.ComputeHash(counterBytes);
-            }
+            Rfc2898DeriveBytes pbkdf2 = new Rfc2898DeriveBytes(Encoding.UTF8.GetBytes(mnemonic), Encoding.UTF8.GetBytes(saltHeader + passphrase), 2048, HashAlgorithmName.SHA512); ;
+            var counterBytes = pbkdf2.GetBytes(64);
             return counterBytes;
+        }
+
+        public static byte[] SeedToPrivateKey(byte[] seed)
+        {
+            var paymentKey = new ExtKey(seed).Derive(KeyPath.Parse("m/44'/888'/0'/0/0"));
+            return paymentKey.PrivateKey.ToBytes();
         }
 
         /// <summary>
