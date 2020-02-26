@@ -69,10 +69,19 @@ namespace NeoMnemonic
             return counterBytes;
         }
 
-        public static byte[] SeedToPrivateKey(byte[] seed)
+        public static byte[] SeedToPrivateKey(byte[] seed, int coinType)
         {
-            var paymentKey = new ExtKey(seed).Derive(KeyPath.Parse("m/44'/888'/0'/0/0"));
+            //coinType: BTC 0, ETH 60, NEO 888, ONT 1024
+            //see https://github.com/satoshilabs/slips/blob/master/slip-0044.md
+            var derivePath = KeyPath.Parse($"m/44'/{coinType}'/0'/0/0");
+            var paymentKey = new ExtKey(seed).Derive(derivePath);
             return paymentKey.PrivateKey.ToBytes();
+        }
+
+        public static string SeedToWPF(byte[] seed, int coinType)
+        {
+            var account = new Neo.Wallets.KeyPair(SeedToPrivateKey(seed, coinType));
+            return account.Export();
         }
 
         /// <summary>

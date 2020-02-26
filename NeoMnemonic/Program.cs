@@ -11,14 +11,18 @@ namespace NeoMnemonic
             while (true)
             {
                 var words = Mnemonic.GenerateMnemonic();
-                Console.WriteLine("Mnemonic: " + words);
+                Console.WriteLine($"Mnemonic: {words}");
+
                 var seed = Mnemonic.MnemonicToSeed(words);
-                Console.WriteLine("SEED: " + seed.ToHexString());
-                var masterkey = Mnemonic.SeedToPrivateKey(seed);
-                var account = new Neo.Wallets.KeyPair(masterkey);
-                var address = Neo.SmartContract.Contract.CreateSignatureContract(account.PublicKey).Address;
-                Console.WriteLine("WIF: " + account.Export());
-                Console.WriteLine("Addr.: " + address);
+                Console.WriteLine($"Seed: {seed.ToHexString()}");
+
+                var btc = Mnemonic.SeedToWPF(seed, 0);
+                var neo = Mnemonic.SeedToWPF(seed, 888);
+                var ont = Mnemonic.SeedToWPF(seed, 1024);
+                Console.WriteLine($"BTC WIF: {btc}");
+                Console.WriteLine($"NEO WIF: {neo}");
+                Console.WriteLine($"ONT WIF: {ont}");
+
                 Console.ReadLine();
             }
         }

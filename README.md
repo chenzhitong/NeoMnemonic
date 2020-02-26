@@ -1,11 +1,12 @@
 # NeoMnemonic
 
-比特币助词词 BIP39 的 C# 实现，代码精简，去除了对比特币的偶合；
-与 Neo 松耦合，仅在 Sha256 和 导出私钥两处进行了引用。
+比特币助记词算法的 C# 实现。
 
 ## 方法
 
 生成助记词
+
+[BIP39 Wordlists](https://github.com/bitcoin/bips/blob/master/bip-0039/bip-0039-wordlists.md)
 
 ```csharp
 Mnemonic.GenerateMnemonic();
@@ -23,78 +24,54 @@ Mnemonic.MnemonicToSeed(words);
 Mnemonic.MnemonicToSeed(words, "passphrase");
 ```
 
+通过种子生成特定币种的私钥
+
+Coin Type: BTC 0, ETH 60, NEO 888, ONT 1024 [完整的币种列表](https://github.com/satoshilabs/slips/blob/master/slip-0044.md)
+
+```
+Mnemonic.SeedToWPF(seed, 0);
+Mnemonic.SeedToWPF(seed, 888);
+Mnemonic.SeedToWPF(seed, 1024);
+```
+
 ## 示例
 
 ```
-Mnemonic: layer cute chase green east silent comfort pulse never obey fragile average
-WIF: L2T74AZUAs8qKYGercUub7ex1JgfY53G2hQ2xBDuXFAF8oMNiTgC
+Mnemonic: test cruise rely brand crazy spoon soda flee congress spawn lady curious
+Seed: c7a91f4aa3ace1425881cf36abb74304361e4a22c8ea43af93898d635e3af71f938834279085d7227842af39de613bbc20a34ab5d6bc077de051c53cf909a1ae
+BTC WIF: L4E3VT1Nr7NkTJ8ttZ3dQdcGtGHYvw2rByUjEQfGUdvRQAGrpJeq
+NEO WIF: L3QZ4s4qgK5ggT2SnPL6nLEdTdhQeogssCgCJmYhDwVneR49MQCD
+ONT WIF: KypaagtwRKXNPk1uhsdQ9YGhSTVGsg7aDrs8T76HLjcRnqAj1emb
 
-Mnemonic: rich mobile chair arrange often describe execute settle journey arena peanut sudden
-WIF: L4HdQSpu1TmTmVKzMpR3gTFwibjuPLNz5DFFck2kJvngHZP7gTK7
+Mnemonic: cup lens idle rail flash flower large gold super crouch second circle
+Seed: 20e5ebc63a1ba7dcd8b3089724220826a74b12b776c5178b0dde9c68f17ccc66b629471a00401c513d2b5102ebed179873ca6ed6ad33b31e34776e2dfabed155
+BTC WIF: L14VBFUyPf779ttoBkmJS37d123vHp3oZVu7fWe4HViNceoxqz1p
+NEO WIF: L2VpzdAG1Jek5hiALVV51L3mHDtbc4qtDryXxja9yDS4g7X5yepd
+ONT WIF: Kzugw7LWBcpiw2PRR8THNrHnzeDXqNScMm2yAdfu59HU9UuPRvAG
 
-Mnemonic: area poet follow gain heart swear brief cloud north two heavy fade
-WIF: L3jwtQQWuBkaHvvp3gdv7u2PJpknYE8mo9VCiZUcKrdR7ik5mdbM
-
-Mnemonic: country alone offer moment laundry inspire master tone shop cluster torch flag
-WIF: KyWQP2byVT53iKQ6TmnCaqpR8k5MURvMQz6QPK4XPzdfxSGNTJnw
-```
-
-```
-Mnemonic: 如 连 实 算 价 印 远 悬 妥 查 动 徙
-WIF: L1Ejs1XhrevX16Erhdp19nX63XE4CXNcaaMEvYHYw2VEVq3zE6DQ
-
-Mnemonic: 门 卡 验 争 笼 府 鼓 执 薄 了 伦 邮
-WIF: KwYMAfhUZgEWdABPJdKvbmqDWY27qWT7BTeL23XCxqiDgGMpBPU7
-
-Mnemonic: 却 敬 股 写 功 牵 盐 互 顾 院 坡 乌
-WIF: Ky6XLDXPVF7BCFPkicGGCgf7A25bHfrZurDB1hzxL5Zeg4ZWKLTj
-```
-
-```
-Mnemonic: 臣 叔 戶 胺 倉 遇 鉺 軟 均 杭 伴 前 竟 須 婦 蔣 勞 聯 鹼 訟 運 林 衡 殖
-WIF: KwUFHWnYktEqxMiUsem4iQXBfb1Z7KwK4DPDABTMsxLGnNDBdn8P
-
-Mnemonic: 為 貿 望 怎 柬 徹 罷 誠 惜 噴 焰 刑 坐 寫 款 飯 奮 鍵 田 覽 傳 雲 環 虎
-WIF: KxUPkv14MkiF9iF7UZ1Ec2vGtRqQ8YVN1dxoBxgmzcarGs82rNqH
-
-Mnemonic: 罪 粒 順 雨 憂 難 洲 徒 偏 爭 授 倉 壁 府 巧 屈 植 舞 之 下 像 逆 忘 朝
-WIF: KzDRYmGEmqR61NWBpaVCX1DJVU8UB5g2vbsNstDRK6a3AGVHfZxG
+Mnemonic: assume violin aware gown patch dry age review chimney pottery proof van
+Seed: 8f5e20367352c3585c55f6a92a4a161df9e1d8903269dc3f3643f66da53f2136cc9d864e49b0c43c00539bc2dd9a094d9c61c99ecc4d9248be6473b8df268257
+BTC WIF: L5aQxZw1WySvjicid847s2hTfFRoeudSXs3gsxp1CszUZLrHa2RK
+NEO WIF: Ky72nn6F7kJGj5Dcm69BbAKC2L3D8iMZYns2AYaP5iNAqCULXMq7
+ONT WIF: L5Ax3gvY8mVyj69pHj24g2BCk5sqcG1ncdZFj3GpuvFDUw8u7uUF
 ```
 
 ## 参考：
 
-BIP39
+[BIP39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki)
 
-https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki
+[BIP32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)
 
-BIP39 Wordlists
+[BIP43](https://github.com/bitcoin/bips/blob/master/bip-0043.mediawiki)
 
-https://github.com/bitcoin/bips/blob/master/bip-0039/bip-0039-wordlists.md
+[BIP44](https://github.com/satoshilabs/slips/blob/master/slip-0044.md)
 
-BIP39.NET
+[比特币源码学习-钱包标准(一)-BIP32/BIP44](https://blog.csdn.net/m0_37847176/article/details/82011876)
 
-https://github.com/realindiahotel/BIP39.NET
+[比特币源码学习-钱包标准（二）-BIP39](https://blog.csdn.net/m0_37847176/article/details/82177627)
 
-比特币源码学习-钱包标准(一)-BIP32/BIP44
+[助记词 - 廖雪峰的官方网站](https://www.liaoxuefeng.com/wiki/1207298049439968/1207320517404448)
 
-https://blog.csdn.net/m0_37847176/article/details/82011876
+[理解开发HD 钱包涉及的 BIP32、BIP44、BIP39](https://learnblockchain.cn/2018/09/28/hdwallet/)
 
-比特币源码学习-钱包标准（二）-BIP39
-
-https://blog.csdn.net/m0_37847176/article/details/82177627
-
-助记词 - 廖雪峰的官方网站
-
-https://www.liaoxuefeng.com/wiki/1207298049439968/1207320517404448
-
-JavaScript implementation of Bitcoin BIP39
-
-https://github.com/bitcoinjs/bip39
-
-理解开发HD 钱包涉及的 BIP32、BIP44、BIP39
-
-https://learnblockchain.cn/2018/09/28/hdwallet/
-
-基于 BIP-32 和 BIP-39 规范生成 HD 钱包（分层确定性钱包）
-
-https://stevenocean.github.io/2018/09/23/generate-hd-wallet-by-bip39.html
+[基于 BIP-32 和 BIP-39 规范生成 HD 钱包（分层确定性钱包）](https://stevenocean.github.io/2018/09/23/generate-hd-wallet-by-bip39.html)
