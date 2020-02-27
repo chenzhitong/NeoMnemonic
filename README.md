@@ -24,6 +24,14 @@ Mnemonic.MnemonicToSeed(words);
 Mnemonic.MnemonicToSeed(words, "passphrase");
 ```
 
+> 错误情况：
+>
+> 1、助记词单词数必须为 12 或 15 或 18 或 21 或 24
+>
+> 2、助记词必须为助记词列表中的单词
+>
+> 3、助记词校验不通过
+
 通过种子生成特定币种的私钥
 
 Coin Type: BTC 0, ETH 60, NEO 888, ONT 1024 [完整的币种列表](https://github.com/satoshilabs/slips/blob/master/slip-0044.md)

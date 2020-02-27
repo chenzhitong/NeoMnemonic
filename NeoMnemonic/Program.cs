@@ -15,7 +15,7 @@ namespace NeoMnemonic
                     var words = Mnemonic.GenerateMnemonic();
                     Console.WriteLine($"Mnemonic: {words}");
 
-                    var seed = Mnemonic.MnemonicToSeed("grass team moral casino shadow trumpet soccer hole pattern rebuild jaguar furnace");
+                    var seed = Mnemonic.MnemonicToSeed(words);
                     Console.WriteLine($"Seed: {seed.ToHexString()}");
 
                     var btc = Mnemonic.SeedToWPF(seed, 0);
