@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NeoMnemonic
 {
-    enum EntropyLength
+    public enum EntropyLength
     {
         _128 = 128,
         _160 = 160,
