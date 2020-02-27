@@ -72,7 +72,7 @@ ONT WIF: L5Ax3gvY8mVyj69pHj24g2BCk5sqcG1ncdZFj3GpuvFDUw8u7uUF
 
 [BIP43](https://github.com/bitcoin/bips/blob/master/bip-0043.mediawiki)
 
-[BIP44](https://github.com/satoshilabs/slips/blob/master/slip-0044.md)
+[BIP44](https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki)
 
 [比特币源码学习-钱包标准(一)-BIP32/BIP44](https://blog.csdn.net/m0_37847176/article/details/82011876)
 
