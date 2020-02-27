@@ -10,18 +10,25 @@ namespace NeoMnemonic
         {
             while (true)
             {
-                var words = Mnemonic.GenerateMnemonic();
-                Console.WriteLine($"Mnemonic: {words}");
+                try
+                {
+                    var words = Mnemonic.GenerateMnemonic();
+                    Console.WriteLine($"Mnemonic: {words}");
 
-                var seed = Mnemonic.MnemonicToSeed(words);
-                Console.WriteLine($"Seed: {seed.ToHexString()}");
+                    var seed = Mnemonic.MnemonicToSeed("grass team moral casino shadow trumpet soccer hole pattern rebuild jaguar furnace");
+                    Console.WriteLine($"Seed: {seed.ToHexString()}");
 
-                var btc = Mnemonic.SeedToWPF(seed, 0);
-                var neo = Mnemonic.SeedToWPF(seed, 888);
-                var ont = Mnemonic.SeedToWPF(seed, 1024);
-                Console.WriteLine($"BTC WIF: {btc}");
-                Console.WriteLine($"NEO WIF: {neo}");
-                Console.WriteLine($"ONT WIF: {ont}");
+                    var btc = Mnemonic.SeedToWPF(seed, 0);
+                    var neo = Mnemonic.SeedToWPF(seed, 888);
+                    var ont = Mnemonic.SeedToWPF(seed, 1024);
+                    Console.WriteLine($"BTC WIF: {btc}");
+                    Console.WriteLine($"NEO WIF: {neo}");
+                    Console.WriteLine($"ONT WIF: {ont}");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Error: {e.Message}");
+                }
 
                 Console.ReadLine();
             }

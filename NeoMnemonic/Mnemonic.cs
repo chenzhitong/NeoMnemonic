@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using Neo.Cryptography;
 using System.Linq;
 using NBitcoin;
+using Neo;
 
 namespace NeoMnemonic
 {
@@ -56,6 +57,52 @@ namespace NeoMnemonic
             return string.Join(' ', words);
         }
 
+        public static bool Verification(string mnemonic)
+        {
+            var words = mnemonic.Trim().Split(' ');
+            //判断助记词的单数数是否合法
+            var allowLength = new int[] { 12, 15, 18, 21, 24 };
+            if (!allowLength.Contains(words.Length)) throw new ArgumentException("Mnemonic words count error!");
+
+            //检测助记语言
+            Wordlist wordList = new English();
+            if (new ChineseSimplified().WordList.Contains(words[0]))
+                wordList = new ChineseSimplified();
+            if (new ChineseTraditional().WordList.Contains(words[0]))
+                wordList = new ChineseTraditional();
+
+            //将助记词转为二进制字符串（每个单词转为 11 位的二进制数）
+            var sb = new StringBuilder();
+            foreach (var item in words)
+            {
+                var index = wordList.WordList.IndexOf(item);
+                if (index < 0) throw new ArgumentException($"The \"{item}\" isn't the correct mnemonic word!");
+                var str = Convert.ToString(index, 2);
+                while (str.Length < 11)
+                {
+                    str = "0" + str;
+                }
+                sb.Append(str);
+            }
+            var entropyString = sb.ToString();
+            //将二进制字符串转了字节数组
+            var entropyBytes = new List<byte>();
+            for (int i = 0; i < sb.Length / 8; i++)
+            {
+                var binaryString = new string(entropyString.Substring(i * 8, 8).Reverse().ToArray());
+                var temp = 0;
+                for (int j = 0; j < binaryString.Length; j++)
+                {
+                    temp += (int)Math.Pow(2, j) * (binaryString[j] == '1' ? 1 : 0);
+                }
+                entropyBytes.Add((byte)temp);
+            }
+            var checksum = entropyBytes.Sha256();
+            var checksumString = ToBinaryString(checksum).Substring(0, entropyBytes.Count() / 4);
+            if (!entropyString.EndsWith(checksumString)) throw new ArgumentException($"The mnemonic verification doesn't pass!");
+            return true;
+        }
+
         /// <summary>
         /// 通过助记词和口令（可选）生成种子
         /// </summary>
@@ -64,6 +111,7 @@ namespace NeoMnemonic
         /// <returns></returns>
         public static byte[] MnemonicToSeed(string mnemonic, string passphrase = "") 
         {
+            if (!Verification(mnemonic)) return null;
             Rfc2898DeriveBytes pbkdf2 = new Rfc2898DeriveBytes(Encoding.UTF8.GetBytes(mnemonic), Encoding.UTF8.GetBytes(saltHeader + passphrase), 2048, HashAlgorithmName.SHA512); ;
             var counterBytes = pbkdf2.GetBytes(64);
             return counterBytes;
@@ -80,6 +128,7 @@ namespace NeoMnemonic
 
         public static string SeedToWPF(byte[] seed, int coinType)
         {
+            if (seed == null) throw new ArgumentNullException("seed");
             var account = new Neo.Wallets.KeyPair(SeedToPrivateKey(seed, coinType));
             return account.Export();
         }
