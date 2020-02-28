@@ -12,7 +12,7 @@ namespace NeoMnemonic
             {
                 try
                 {
-                    var words = "spawn tomorrow nurse ring thank hen ritual bracket purity junk coyote all wait pig near know issue finish cream give electric wide tag range";
+                    var words = Mnemonic.GenerateMnemonic();
                     Console.WriteLine($"Mnemonic: {words}");
 
                     var seed = Mnemonic.MnemonicToSeed(words);

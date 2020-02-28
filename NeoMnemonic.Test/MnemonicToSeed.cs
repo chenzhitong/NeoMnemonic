@@ -33,8 +33,8 @@ namespace NeoMnemonic.Test
         [TestMethod]
         public void MnemonicToSeed5()
         {
-            var seed = Mnemonic.MnemonicToSeed("¹· ñT Ùe ˆF Áï û| ·´ Ê³ ºé ŠA ¼{ À@ žI ½ª •³");
-            Assert.AreEqual(seed.ToHexString(), "d54cf5f67cb5afcaa6eb272bcc4472c83cf77d11777205f4628abfe63dfb5b6e587a1740f22aa685e59e76e30e7f914acad2c6896305cb0d6810929339e37ecf");
+            var seed = Mnemonic.MnemonicToSeed("Òþ ¶ú Íþ ÉÁ Ê± ¶Ï ¿á ×¥ ÐÔ µù ±Ú ¼· Çü Á× ÃÏ ½± µù ¾É Ôµ ÈÏ ½¯ Æá ÌÑ Æ¤");
+            Assert.AreEqual(seed.ToHexString(), "862cb55a0453a3a8f693ede77425fcd9c7ee4998fe37c83c0d8aef0b29834295fa99df5fc4b730b7d9ac394469e3061dd6a03778430cd5a5a542b6925f5e6cfb");
         }
         [TestMethod]
         public void MnemonicToSeed6()

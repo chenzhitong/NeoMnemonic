@@ -49,8 +49,6 @@ namespace NeoMnemonic
             Wordlist wordList;
             if (language == Language.ChineseSimplified)
                 wordList = new ChineseSimplified();
-            else if (language == Language.ChineseTraditional)
-                wordList = new ChineseTraditional();
             else
                 wordList = new English();
             index.ForEach(p => words.Add(wordList.WordList[p]));
@@ -66,10 +64,8 @@ namespace NeoMnemonic
 
             //检测助记语言
             Wordlist wordList = new English();
-            if (new ChineseSimplified().WordList.Contains(words[0]))
+            if (words.ToList().All(p => new ChineseSimplified().WordList.Contains(p)))
                 wordList = new ChineseSimplified();
-            if (new ChineseTraditional().WordList.Contains(words[0]))
-                wordList = new ChineseTraditional();
 
             //将助记词转为二进制字符串（每个单词转为 11 位的二进制数）
             var sb = new StringBuilder();

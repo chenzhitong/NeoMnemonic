@@ -16,6 +16,62 @@ namespace NeoMnemonic.Test
                 Assert.IsTrue(Mnemonic.Verification(Mnemonic.GenerateMnemonic()));
             }
         }
+        [TestMethod]
+        public void Validation1_1()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Assert.IsTrue(Mnemonic.Verification(Mnemonic.GenerateMnemonic(EntropyLength._160)));
+            }
+        }
+        [TestMethod]
+        public void Validation1_2()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Assert.IsTrue(Mnemonic.Verification(Mnemonic.GenerateMnemonic(EntropyLength._192)));
+            }
+        }
+        [TestMethod]
+        public void Validation1_3()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Assert.IsTrue(Mnemonic.Verification(Mnemonic.GenerateMnemonic(EntropyLength._224)));
+            }
+        }
+        [TestMethod]
+        public void Validation1_4()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Assert.IsTrue(Mnemonic.Verification(Mnemonic.GenerateMnemonic(EntropyLength._256)));
+            }
+        }
+        [TestMethod]
+        public void Validation1_5()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Assert.IsTrue(Mnemonic.Verification(Mnemonic.GenerateMnemonic(EntropyLength._256, Mnemonic.Language.ChineseSimplified)));
+            }
+        }
+        [TestMethod]
+        public void Validation1_6()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Assert.IsTrue(Mnemonic.Verification(Mnemonic.GenerateMnemonic(EntropyLength._256, Mnemonic.Language.ChineseTraditional)));
+            }
+        }
+        [TestMethod]
+        public void Validation1_7()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Assert.IsTrue(Mnemonic.Verification(Mnemonic.GenerateMnemonic(EntropyLength._128, Mnemonic.Language.ChineseSimplified)));
+            }
+        }
 
         [TestMethod]
         public void Validation2()
