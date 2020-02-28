@@ -84,10 +84,11 @@ namespace NeoMnemonic
                 }
                 sb.Append(str);
             }
-            var entropyString = sb.ToString();
+            var entcsString = sb.ToString();
+            var entropyString = entcsString.Substring(0, sb.Length * 32 / 33);
             //将二进制字符串转了字节数组
             var entropyBytes = new List<byte>();
-            for (int i = 0; i < sb.Length / 8; i++)
+            for (int i = 0; i < entropyString.Length / 8; i++)
             {
                 var binaryString = new string(entropyString.Substring(i * 8, 8).Reverse().ToArray());
                 var temp = 0;
@@ -99,7 +100,7 @@ namespace NeoMnemonic
             }
             var checksum = entropyBytes.Sha256();
             var checksumString = ToBinaryString(checksum).Substring(0, entropyBytes.Count() / 4);
-            if (!entropyString.EndsWith(checksumString)) throw new ArgumentException($"The mnemonic verification doesn't pass!");
+            if (!entcsString.EndsWith(checksumString)) throw new ArgumentException($"The mnemonic verification doesn't pass!");
             return true;
         }
 
