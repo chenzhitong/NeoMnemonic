@@ -123,7 +123,7 @@ namespace NeoMnemonic
             return paymentKey.PrivateKey.ToBytes();
         }
 
-        public static string SeedToWPF(byte[] seed, int coinType)
+        public static string SeedToWIF(byte[] seed, int coinType)
         {
             if (seed == null) throw new ArgumentNullException("seed");
             var account = new Neo.Wallets.KeyPair(SeedToPrivateKey(seed, coinType));

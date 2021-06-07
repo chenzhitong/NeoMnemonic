@@ -37,9 +37,9 @@ Mnemonic.MnemonicToSeed(words, "passphrase");
 Coin Type: BTC 0, ETH 60, NEO 888, ONT 1024 [完整的币种列表](https://github.com/satoshilabs/slips/blob/master/slip-0044.md)
 
 ```
-Mnemonic.SeedToWPF(seed, 0);
-Mnemonic.SeedToWPF(seed, 888);
-Mnemonic.SeedToWPF(seed, 1024);
+Mnemonic.SeedToWIF(seed, 0);
+Mnemonic.SeedToWIF(seed, 888);
+Mnemonic.SeedToWIF(seed, 1024);
 ```
 
 ## 示例
