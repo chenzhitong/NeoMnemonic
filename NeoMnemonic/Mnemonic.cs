@@ -1,17 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Security.Cryptography;
-using Neo.Cryptography;
-using System.Linq;
-using NBitcoin;
+﻿using NBitcoin;
 using Neo;
+using Neo.Cryptography;
+using Neo.IO;
+using Neo.SmartContract;
+using Neo.Wallets;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace NeoMnemonic
 {
     public static class Mnemonic
     {
-        private const string saltHeader = "mnemonic"; //这是盐的第一部分，如 BIP39 规范中所述
         public enum Language { English, ChineseSimplified, ChineseTraditional, Unknown };
 
         /// <summary>
@@ -94,7 +96,7 @@ namespace NeoMnemonic
                 }
                 entropyBytes.Add((byte)temp);
             }
-            var checksum = entropyBytes.Sha256();
+            var checksum = entropyBytes.ToArray().Sha256();
             var checksumString = ToBinaryString(checksum).Substring(0, entropyBytes.Count() / 4);
             if (!entcsString.EndsWith(checksumString)) throw new ArgumentException($"The mnemonic verification doesn't pass!");
             return true;
@@ -109,25 +111,63 @@ namespace NeoMnemonic
         public static byte[] MnemonicToSeed(string mnemonic, string passphrase = "") 
         {
             if (!Verification(mnemonic)) return null;
-            Rfc2898DeriveBytes pbkdf2 = new Rfc2898DeriveBytes(Encoding.UTF8.GetBytes(mnemonic), Encoding.UTF8.GetBytes(saltHeader + passphrase), 2048, HashAlgorithmName.SHA512); ;
+            Rfc2898DeriveBytes pbkdf2 = new Rfc2898DeriveBytes(Encoding.UTF8.GetBytes(mnemonic), Encoding.UTF8.GetBytes("mnemonic" + passphrase), 2048, HashAlgorithmName.SHA512);
             var counterBytes = pbkdf2.GetBytes(64);
             return counterBytes;
         }
 
-        public static byte[] SeedToPrivateKey(byte[] seed, int coinType)
+        //coinType: BTC 0, ETH 60, NEO 888, ONT 1024
+        //see https://github.com/satoshilabs/slips/blob/master/slip-0044.md
+        public static string Path = "m/44'/888'/0'/0/0";
+
+        /// <summary>
+        /// 使用 Bitcoin seed 作为主秘钥的 Key，兼容 OneGate, 兼容 https://iancoleman.io/bip39/
+        /// </summary>
+        /// <param name="seed"></param>
+        /// <returns></returns>
+        public static byte[] SeedToPrivateKey(byte[] seed)
         {
-            //coinType: BTC 0, ETH 60, NEO 888, ONT 1024
-            //see https://github.com/satoshilabs/slips/blob/master/slip-0044.md
-            var derivePath = KeyPath.Parse($"m/44'/{coinType}'/0'/0/0");
-            var paymentKey = new ExtKey(seed).Derive(derivePath);
+            var paymentKey = new ExtKey(seed.ToHexString()).Derive(KeyPath.Parse(Path));
             return paymentKey.PrivateKey.ToBytes();
         }
 
-        public static string SeedToWIF(byte[] seed, int coinType)
+        /// <summary>
+        /// 使用 Nist256p1 seed 作为主秘钥的 Key，兼容性未知
+        /// </summary>
+        /// <param name="seed"></param>
+        /// <returns></returns>
+        public static byte[] SeedToPrivateKey2(byte[] seed)
         {
-            if (seed == null) throw new ArgumentNullException("seed");
-            var account = new Neo.Wallets.KeyPair(SeedToPrivateKey(seed, coinType));
+            var hmac = new HMACSHA512(Encoding.UTF8.GetBytes("Nist256p1 seed")).ComputeHash(seed);
+            var masterKey = new ExtKey(new Key(hmac[..32].ToArray()), hmac[32..].ToArray());
+            var paymentKey = masterKey.Derive(KeyPath.Parse(Path));
+            return paymentKey.PrivateKey.ToBytes();
+        }
+
+        public static string SeedToWIF(byte[] seed)
+        {
+            var account = new KeyPair(SeedToPrivateKey(seed));
             return account.Export();
+        }
+
+        public static string SeedToWIF2(byte[] seed)
+        {
+            var account = new KeyPair(SeedToPrivateKey2(seed));
+            return account.Export();
+        }
+
+        public static string SeedToNeoAddress(byte[] seed)
+        {
+            var account = new KeyPair(SeedToPrivateKey(seed));
+            var output = Contract.CreateSignatureContract(account.PublicKey).ScriptHash.ToAddress(0x35);
+            return output;
+        }
+
+        public static string SeedToNeoAddress2(byte[] seed)
+        {
+            var account = new KeyPair(SeedToPrivateKey2(seed));
+            var output = Contract.CreateSignatureContract(account.PublicKey).ScriptHash.ToAddress(0x35);
+            return output;
         }
 
         /// <summary>
