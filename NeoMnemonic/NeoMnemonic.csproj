@@ -6,8 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-      <PackageReference Include="NBitcoin" Version="5.0.14" />
+    <PackageReference Include="NBitcoin" Version="7.0.46" />
     <PackageReference Include="Neo" Version="3.7.6" />
+    <PackageReference Include="PnPeople.Security" Version="1.1.0" />
     <PackageReference Include="System.Security.Cryptography.Cng" Version="5.0.0" />
   </ItemGroup>
 
