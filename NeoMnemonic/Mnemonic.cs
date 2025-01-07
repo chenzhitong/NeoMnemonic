@@ -145,7 +145,7 @@ namespace NeoMnemonic
         }
 
         /// <summary>
-        /// 这是兼容neon和ledger的种子转私钥算法，二者均使用了Moonlight-io/asteroid-sdk-js库，其中对Bip32进行了略微的修改
+        /// 这是兼容neon和ledger的种子转私钥算法
         /// </summary>
         /// <param name="seed"></param>
         /// <returns></returns>
