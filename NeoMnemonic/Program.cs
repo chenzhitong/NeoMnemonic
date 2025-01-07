@@ -1,6 +1,15 @@
-﻿using Neo;
+﻿using NBitcoin;
+using Neo;
+using Neo.Cryptography;
+using Neo.IO;
+using Neo.SmartContract;
+using Neo.Wallets;
+using Org.BouncyCastle.Utilities.Encoders;
 using System;
-using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace NeoMnemonic
 {
@@ -8,19 +17,26 @@ namespace NeoMnemonic
     {
         static void Main(string[] args)
         {
-            var words = "machine kingdom into guitar term ensure armed trap language smooth crouch pen";
+            var words = "decrease horror keen muffin certain peace lemon mind click nuclear father apart will rebel media frost wire clay key width repeat random duty cube";
+            Console.WriteLine($"Mnemonic: {words}");
             var seed = Mnemonic.MnemonicToSeed(words);
             Console.WriteLine($"Seed: {seed.ToHexString()}");
 
-            var addr = Mnemonic.SeedToNeoAddress(seed);
+            Console.WriteLine();
+
+            Console.WriteLine($"兼容onegate:");
+            var wif1 = Mnemonic.SeedToWIF_1(seed);
+            Console.WriteLine($"WIF: {wif1}");
+            var addr1 = Mnemonic.PrivateKeyToAddress(wif1);
+            Console.WriteLine($"Address: {addr1}");
+
+            Console.WriteLine();
+
+            Console.WriteLine($"兼容neon, neoline:");
+            var wif = Mnemonic.SeedToWIF_2(seed);
+            Console.WriteLine($"WIF: {wif}");
+            var addr = Mnemonic.PrivateKeyToAddress(wif);
             Console.WriteLine($"Address: {addr}");
-
-            //machine kingdom into guitar term ensure armed trap language smooth crouch pen
-            //NYbmuR4S2qbVxjQBkSNEJba54Xgui7HS7r
-
-            //decrease horror keen muffin certain peace lemon mind click nuclear father apart will rebel media frost wire clay key width repeat random duty cube
-            //WIF Kypb4z3uevxYhE4M2gLByc2cmjq14d3jbkFMXkMH6CzNgUtwTTN1
-            //Address NWHpGSgogdm8EWyhasV7DKJnsW6CvrSEnd
         }
     }
 }
