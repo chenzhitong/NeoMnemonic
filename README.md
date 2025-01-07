@@ -6,9 +6,10 @@ Neo 3 中的助记词生成算法（按照比特币 BIP32 BIP39 BIP41 标准实�
 
 兼容钱包：
 
-- OneGate
+- OneGate、https://iancoleman.io/bip39/ （在网址中手动指定派生路径 m/44'/888'/0'/0/0）
+- neon、Ledger
 
-## 方法
+## 示例
 
 生成助记词
 
@@ -38,37 +39,30 @@ Mnemonic.MnemonicToSeed(words, "passphrase");
 >
 > 3、助记词校验不通过
 
-通过种子生成特定币种的私钥
-
-Coin Type: BTC 0, ETH 60, NEO 888, ONT 1024 [完整的币种列表](https://github.com/satoshilabs/slips/blob/master/slip-0044.md)
+通过种子生成 neo 的私钥
 
 ```
-Mnemonic.SeedToWIF(seed, 0);
-Mnemonic.SeedToWIF(seed, 888);
-Mnemonic.SeedToWIF(seed, 1024);
+Mnemonic.SeedToWIF_1(seed); //兼容onegate
+Mnemonic.SeedToWIF_2(seed); //兼容neon, neoline
 ```
 
-## 示例
+## 兼容性问题
 
-```
-Mnemonic: test cruise rely brand crazy spoon soda flee congress spawn lady curious
-Seed: c7a91f4aa3ace1425881cf36abb74304361e4a22c8ea43af93898d635e3af71f938834279085d7227842af39de613bbc20a34ab5d6bc077de051c53cf909a1ae
-BTC WIF: L4E3VT1Nr7NkTJ8ttZ3dQdcGtGHYvw2rByUjEQfGUdvRQAGrpJeq
-NEO WIF: L3QZ4s4qgK5ggT2SnPL6nLEdTdhQeogssCgCJmYhDwVneR49MQCD
-ONT WIF: KypaagtwRKXNPk1uhsdQ9YGhSTVGsg7aDrs8T76HLjcRnqAj1emb
+为什么 OneGate 和 neon 的相同的助记词导入后地址不同？
 
-Mnemonic: cup lens idle rail flash flower large gold super crouch second circle
-Seed: 20e5ebc63a1ba7dcd8b3089724220826a74b12b776c5178b0dde9c68f17ccc66b629471a00401c513d2b5102ebed179873ca6ed6ad33b31e34776e2dfabed155
-BTC WIF: L14VBFUyPf779ttoBkmJS37d123vHp3oZVu7fWe4HViNceoxqz1p
-NEO WIF: L2VpzdAG1Jek5hiALVV51L3mHDtbc4qtDryXxja9yDS4g7X5yepd
-ONT WIF: Kzugw7LWBcpiw2PRR8THNrHnzeDXqNScMm2yAdfu59HU9UuPRvAG
+OneGate 引用的是 bip32/bip39 库
 
-Mnemonic: assume violin aware gown patch dry age review chimney pottery proof van
-Seed: 8f5e20367352c3585c55f6a92a4a161df9e1d8903269dc3f3643f66da53f2136cc9d864e49b0c43c00539bc2dd9a094d9c61c99ecc4d9248be6473b8df268257
-BTC WIF: L5aQxZw1WySvjicid847s2hTfFRoeudSXs3gsxp1CszUZLrHa2RK
-NEO WIF: Ky72nn6F7kJGj5Dcm69BbAKC2L3D8iMZYns2AYaP5iNAqCULXMq7
-ONT WIF: L5Ax3gvY8mVyj69pHj24g2BCk5sqcG1ncdZFj3GpuvFDUw8u7uUF
-```
+- 按照 bip32 规范，masterkey 的 fingerprint 应该是 4 字节的 [0,0,0,0]
+- HMACSHA512算法的密钥为默认的 Bitcoin seed
+- 派生路径时用的曲线是 Secp256k1
+
+neon 使用了 Moonlight-io/asteroid-sdk-js 库
+
+- masterkey 的 fingerprint 是一个字节的 [46]，就是 '0' 的 ASCII 码
+- HMACSHA512 算法的密钥为了 Nist256p1 seed
+- 派生路径时用的曲线是 Secp256r1
+
+另外二者对BitInteger的实现略有不同，导致了最终同样 seed 生成的私钥不同。
 
 ## 参考：
 
