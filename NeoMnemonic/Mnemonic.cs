@@ -131,16 +131,11 @@ namespace NeoMnemonic
         /// <param name="seed">由助记词生成的seed</param>
         /// <param name="derivationPath">派生路径</param>
         /// <returns></returns>
-        public static byte[] SeedToPrivateKey_1(byte[] seed, string derivationPath = "m/44'/888'/0'/0/0")
-        {
-            var paymentKey = new ExtKey(seed.ToHexString()).Derive(KeyPath.Parse(derivationPath));
-            return paymentKey.PrivateKey.ToBytes();
-        }
-
-        public static string SeedToWIF_1(byte[] seed)
+        public static string SeedToWIF_1(byte[] seed, string derivationPath = "m/44'/888'/0'/0/0")
         {
             if (seed == null) throw new ArgumentNullException("seed");
-            var account = new Neo.Wallets.KeyPair(SeedToPrivateKey_1(seed));
+            var paymentKey = new ExtKey(seed.ToHexString()).Derive(KeyPath.Parse(derivationPath));
+            var account = new Neo.Wallets.KeyPair(paymentKey.PrivateKey.ToBytes());
             return account.Export();
         }
 
